@@ -35,5 +35,9 @@
   "chat": {
     "dataSource": "db",
     "public": true
+  },
+  "people": {
+    "dataSource": "mongoDB",
+    "public": true
   }
 }
