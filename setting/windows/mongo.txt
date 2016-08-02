@@ -1,0 +1,6 @@
+安裝安裝檔
+切換到 MongoDB 安裝路徑下的 bin 目錄
+
+md \data\db
+mongod.exe
+mongo.exe
