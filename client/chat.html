@@ -27,7 +27,22 @@
     //console.log(<%=socketAddr %>);
     //var socket = io.connect('locoalhost:3000/chat');
     $('form').submit(function(){
-      socket.emit('chat message', $('#m').val());
+      if($('#m').val()=='bg')
+      {
+         socket.emit('boyFindGirl', $('#m').val());
+      }
+      else if($('#m').val()=='gb')
+      {
+         socket.emit('girlFindBoy', $('#m').val());
+      }
+      else if($('#m').val()=='bb')
+      {
+         socket.emit('boyFindBoy', $('#m').val());
+      }
+      else if($('#m').val()!='')
+      {
+         socket.emit('chat message', $('#m').val());
+      }
       $('#m').val('');
       return false;
     });
