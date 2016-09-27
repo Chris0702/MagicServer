@@ -38,8 +38,8 @@ exports.socketChatOn = function(app) {
             let roomName = 'boyGirlRoom_' + boySocket.id + '_' + girlSocket.id;
             boySocket.join(roomName);
             girlSocket.join(roomName);
-            boySocket.emit('chat message', '已經加入房間');
-            girlSocket.emit('chat message', '已經加入房間');
+            boySocket.emit('chatMessage', '已經加入房間');
+            girlSocket.emit('chatMessage', '已經加入房間');
             app.chatSIO.boyFindGirlWait.splice(0, 1);
             app.chatSIO.girlFindBoyWait.splice(0, 1);
             roomNameRec.push(roomName);
@@ -50,8 +50,8 @@ exports.socketChatOn = function(app) {
             let roomName = 'boyBoyRoom_' + boySocket1.id + '_' + boySocket2.id;
             boySocket1.join(roomName);
             boySocket2.join(roomName);
-            boySocket1.emit('chat message', '已經加入房間');
-            boySocket2.emit('chat message', '已經加入房間');
+            boySocket1.emit('chatMessage', '已經加入房間');
+            boySocket2.emit('chatMessage', '已經加入房間');
             app.chatSIO.boyFindBoyWait.splice(0, 2);
             roomNameRec.push(roomName);
         }
@@ -65,7 +65,7 @@ exports.socketChatOn = function(app) {
 
     function talkWaitStatusForWaitSocketArray(waitSocketArray) {
         for (let i = 0; i < waitSocketArray.length; i++) {
-            waitSocketArray[i].emit('chat message', '你還要等待 ' + (i + 1) + ' 個人');
+            waitSocketArray[i].emit('chatMessage', '你還要等待 ' + (i + 1) + ' 個人');
         }
     }
 
@@ -97,33 +97,47 @@ exports.socketChatOn = function(app) {
         socket.emit('chat message', 'socket connet');
         console.log('a user connected');
 
-        socket.on('boyFindGirl', function() {
-            if (!isSocketExistInArray(socket, app.chatSIO.boyFindGirlWait)) {
+        // socket.on('boyFindGirl', function() {
+        //     if (!isSocketExistInArray(socket, app.chatSIO.boyFindGirlWait)) {
+        //         app.chatSIO.boyFindGirlWait.push(socket);
+        //     }
+        //     console.log('boyFindGirl');
+        // });
+
+        // socket.on('girlFindBoy', function() {
+        //     if (!isSocketExistInArray(socket, app.chatSIO.girlFindBoyWait)) {
+        //         app.chatSIO.girlFindBoyWait.push(socket);
+        //     }
+        //     console.log('girlFindBoy');
+        // });
+
+        // socket.on('boyFindBoy', function() {
+        //     if (!isSocketExistInArray(socket, app.chatSIO.boyFindBoyWait)) {
+        //         app.chatSIO.boyFindBoyWait.push(socket);
+        //     }
+        //     console.log('boyFindBoy');
+        // });
+
+        socket.on('findType', function(msg) {
+            console.log('find message: '+msg);
+            if ((!isSocketExistInArray(socket, app.chatSIO.boyFindGirlWait))&&msg=='boyFindGirl') {
                 app.chatSIO.boyFindGirlWait.push(socket);
             }
-            console.log('boyFindGirl');
-        });
-
-        socket.on('girlFindBoy', function() {
-            if (!isSocketExistInArray(socket, app.chatSIO.girlFindBoyWait)) {
+            else if ((!isSocketExistInArray(socket, app.chatSIO.girlFindBoyWait))&&msg=='girlFindBoy') {
                 app.chatSIO.girlFindBoyWait.push(socket);
             }
-            console.log('girlFindBoy');
-        });
-
-        socket.on('boyFindBoy', function() {
-            if (!isSocketExistInArray(socket, app.chatSIO.boyFindBoyWait)) {
+             else if ((!isSocketExistInArray(socket, app.chatSIO.boyFindBoyWait))&&msg=='boyFindBoy') {
                 app.chatSIO.boyFindBoyWait.push(socket);
             }
-            console.log('boyFindBoy');
+            
         });
 
-        socket.on('chat message', function(msg) {
+        socket.on('chatMessage', function(msg) {
             console.log(socket.id);
             console.log('message: ' + msg);
             console.log(socket.rooms);
             for (let room in socket.rooms) {
-                socket.to(room).broadcast.emit('chat message', msg);
+                socket.to(room).broadcast.emit('chatMessage', msg);
             }
             //socket.broadcast.emit('chat message', msg);
             // app.chatSIO.in('chat').emit('chat message', msg);
@@ -132,7 +146,7 @@ exports.socketChatOn = function(app) {
             console.log('user disconnected');
             leaveWaitRoomForAllWaitSocket(socket);
             removeRoomNameRec(socket);
-            socket.emit('chat message', 'socket disconnected');
+            socket.emit('chatMessage', 'socket disconnected');
         });
     });
 }

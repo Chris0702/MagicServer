@@ -27,26 +27,26 @@
     //console.log(<%=socketAddr %>);
     //var socket = io.connect('locoalhost:3000/chat');
     $('form').submit(function(){
-      if($('#m').val()=='bg')
+      if($('#m').val()=='boyFindGirl')
       {
-         socket.emit('boyFindGirl', $('#m').val());
+         socket.emit('findType', 'boyFindGirl');
       }
-      else if($('#m').val()=='gb')
+      else if($('#m').val()=='girlFindBoy')
       {
-         socket.emit('girlFindBoy', $('#m').val());
+         socket.emit('findType', 'girlFindBoy');
       }
-      else if($('#m').val()=='bb')
+      else if($('#m').val()=='boyFindBoy')
       {
-         socket.emit('boyFindBoy', $('#m').val());
+         socket.emit('findType', 'boyFindBoy');
       }
       else if($('#m').val()!='')
       {
-         socket.emit('chat message', $('#m').val());
+         socket.emit('chatMessage', $('#m').val());
       }
       $('#m').val('');
       return false;
     });
-    socket.on('chat message', function(msg){
+    socket.on('chatMessage', function(msg){
       $('#messages').append($('<li>').text(msg));
     });
     </script>
