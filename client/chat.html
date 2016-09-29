@@ -49,6 +49,9 @@
     socket.on('chatMessage', function(msg){
       $('#messages').append($('<li>').text(msg));
     });
+    socket.on('systemMessage', function(msg){
+      $('#messages').append($('<li>').text(msg));
+    });
     </script>
   </body>
 </html>
